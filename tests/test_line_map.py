@@ -6,6 +6,9 @@ class GamePiece:
   def __init__(self, name, color):
     self.name = name
     self.color = color
+  def __eq__(self, other):
+    return (hasattr(other, 'name') and self.name == other.name
+            and hasattr(other, 'color') and self.color == other.color)
 
 @pytest.fixture
 def empty_map():
@@ -47,3 +50,14 @@ def test_set_out_of_bounds(empty_map):
   # No errors
   empty_map.set(0, GamePiece('cube', 'brown'))
   empty_map.set(7, GamePiece('road', 'blue'))
+
+def test_adjacent(simple_map):
+  assert ((0, None), (2, GamePiece('pawn', 'black'))) == tuple(simple_map.adjacent(1))
+  assert ((5, GamePiece('bishop', 'white')), (7, None)) == tuple(simple_map.adjacent(6))
+  assert ((1, None), (3, None)) == tuple(simple_map.adjacent(2))
+  assert ((1, None),) == tuple(simple_map.adjacent(0))
+  assert ((6, None),) == tuple(simple_map.adjacent(7))
+  with pytest.raises(IndexError):
+    next(simple_map.adjacent(-1))
+  with pytest.raises(IndexError):
+    next(simple_map.adjacent(8))
