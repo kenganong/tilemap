@@ -1,14 +1,7 @@
 from .context import tilemap
 from tilemap import factory
+from .common import GamePiece
 import pytest
-
-class GamePiece:
-  def __init__(self, name, color):
-    self.name = name
-    self.color = color
-  def __eq__(self, other):
-    return (hasattr(other, 'name') and self.name == other.name
-            and hasattr(other, 'color') and self.color == other.color)
 
 @pytest.fixture
 def empty_map():
