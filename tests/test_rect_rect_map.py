@@ -55,3 +55,11 @@ def test_set_out_of_bounds(empty_map):
   # No errors
   empty_map.set((0, 0), GamePiece('cube', 'brown'))
   empty_map.set((2, 3), GamePiece('road', 'blue'))
+
+def test_exists(simple_map):
+  assert simple_map.exists((1, 1))
+  assert simple_map.exists((2, 0))
+  assert simple_map.exists((2, 2))
+  assert simple_map.exists((0, 0))
+  assert not simple_map.exists((5, 2))
+  assert not simple_map.exists((0, -1))
