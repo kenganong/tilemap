@@ -44,6 +44,14 @@ def test_set_out_of_bounds(empty_map):
   empty_map.set(0, GamePiece('cube', 'brown'))
   empty_map.set(7, GamePiece('road', 'blue'))
 
+def test_exists(simple_map):
+  assert simple_map.exists(2)
+  assert simple_map.exists(5)
+  assert simple_map.exists(0)
+  assert simple_map.exists(7)
+  assert not simple_map.exists(8)
+  assert not simple_map.exists(-2)
+
 def test_adjacent(simple_map):
   assert ((0, None), (2, GamePiece('pawn', 'black'))) == tuple(simple_map.adjacent(1))
   assert ((5, GamePiece('bishop', 'white')), (7, None)) == tuple(simple_map.adjacent(6))
