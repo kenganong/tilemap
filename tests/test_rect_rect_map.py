@@ -40,6 +40,9 @@ def test_set(empty_map):
   assert None == empty_map.get((0, 0))
   assert None != empty_map.get((2, 0))
   assert 'meeple' == empty_map.get((2, 0)).name
+  assert None == empty_map.set((1, 2), GamePiece('road', 'black'))
+  assert GamePiece('meeple', 'blue') == empty_map.set((2, 0), GamePiece('pawn', 'white'))
+  assert GamePiece('pawn', 'white') == empty_map.set((2, 0), GamePiece('bishop', 'black'))
 
 def test_set_out_of_bounds(empty_map):
   with pytest.raises(IndexError):

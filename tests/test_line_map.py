@@ -28,10 +28,13 @@ def test_get_out_of_bounds(empty_map):
   empty_map.get(7)
 
 def test_set(empty_map):
-  empty_map.set(1, GamePiece('meeple', 'blue'))
+  assert None == empty_map.set(1, GamePiece('meeple', 'blue'))
   assert None == empty_map.get(0)
   assert None != empty_map.get(1)
   assert 'meeple' == empty_map.get(1).name
+  assert None == empty_map.set(3, GamePiece('road', 'black'))
+  assert GamePiece('meeple', 'blue') == empty_map.set(1, GamePiece('pawn', 'white'))
+  assert GamePiece('pawn', 'white') == empty_map.set(1, GamePiece('bishop', 'black'))
 
 def test_set_out_of_bounds(empty_map):
   with pytest.raises(IndexError):
