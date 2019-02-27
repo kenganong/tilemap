@@ -3,7 +3,44 @@ def create_line_map(length):
 def create_rectangle_map(width, height):
   return RectRectMap(width, height)
 
-class LineMap:
+class Map:
+  def _require_coor(self, coor):
+    if not self.exists(coor):
+      raise IndexError('Coordinate {} outside tilemap bounds'.format(coor))
+  def get(self, coor):
+    """Gets the content of the tile at the given coordinate
+
+    Args:
+      coor (tuple): the coordinate of the tile
+
+    Returns:
+      tile contents
+
+    Raises:
+      IndexError when the given coordinate is outside the map
+    """
+    self._require_coor(coor)
+    return self._get(coor)
+  def set(self, coor, content):
+    """Sets the content of the tile at the given coordinate
+
+    Args:
+      coor (tuple): the coordinate of the tile
+      content: desired tile content
+
+    Returns:
+      prior tile contents
+
+    Raises:
+      IndexError when the given coordinate is outside the map
+    """
+    self._require_coor(coor)
+    previous_content = self._get(coor)
+    self._set(coor, content)
+    return previous_content
+
+
+class LineMap(Map):
   LEFT = -1
   RIGHT = 1
   DIRECTIONS = [LEFT, RIGHT]
@@ -11,14 +48,11 @@ class LineMap:
     self.tiles = [None for _ in range(size)]
   def exists(self, coor):
     return coor > -1 and coor < len(self.tiles)
-  def _require_coor(self, coor):
-    if not self.exists(coor):
-      raise IndexError('Coordinate {} outside tilemap bounds'.format(coor))
-  def get(self, coor):
-    self._require_coor(coor)
+  def _get(self, coor):
+    # internal get assumes that coor is valid
     return self.tiles[coor]
-  def set(self, coor, content):
-    self._require_coor(coor)
+  def _set(self, coor, content):
+    # internal set assumes that coor is valid
     self.tiles[coor] = content
   def adjacent(self, coor):
     self._require_coor(coor)
@@ -27,7 +61,7 @@ class LineMap:
       if self.exists(new_coor):
         yield (new_coor, self.tiles[new_coor])
 
-class RectRectMap:
+class RectRectMap(Map):
   def __init__(self, width, height):
     self.width = width
     self.height = height
@@ -37,17 +71,11 @@ class RectRectMap:
   def exists(self, coor):
     x, y = coor
     return x > -1 and x < self.width and y > -1 and y < self.height
-  def _require_coor(self, coor):
-    if not self.exists(coor):
-      raise IndexError('Coordinate {} outside tilemap bounds'.format(coor))
   def _get(self, coor):
     # internal get assumes that coor is valid
     x, y = coor
     return self.cols[x][y]
-  def get(self, coor):
-    self._require_coor(coor)
-    return self._get(coor)
-  def set(self, coor, content):
+  def _set(self, coor, content):
+    # internal set assumes that coor is valid
     x, y = coor
-    self._require_coor(coor)
     self.cols[x][y] = content
