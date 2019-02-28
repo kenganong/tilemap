@@ -2,6 +2,8 @@ def create_line_map(length):
   return LineMap(length)
 def create_rectangle_map(width, height):
   return RectRectMap(width, height)
+def create_rectangle_hex_map(width, height):
+  return RectHexMap(width, height)
 
 class Map:
   def _require_coor(self, coor):
@@ -79,3 +81,23 @@ class RectRectMap(Map):
     # internal set assumes that coor is valid
     x, y = coor
     self.cols[x][y] = content
+
+class RectHexMap(Map):
+  def __init__(self, width, height):
+    self.width = width
+    self.height = height
+    self.tiles = []
+    for _ in range(height):
+      self.tiles.append([None for _ in range(width)])
+  def exists(self, coor):
+    q, r = coor
+    row_offset = (r + 1) // 2
+    return r > -1 and r < self.height and q > -1 - row_offset and q < self.width - row_offset
+  def _get(self, coor):
+    q, r = coor
+    row_offset = (r + 1) // 2
+    return self.tiles[r][q + row_offset]
+  def _set(self, coor, content):
+    q, r = coor
+    row_offset = (r + 1) // 2
+    self.tiles[r][q + row_offset] = content
