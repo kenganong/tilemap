@@ -56,11 +56,11 @@ def test_exists(simple_map):
   assert not simple_map.exists(-2)
 
 def test_adjacent(simple_map):
-  assert ((0, None), (2, GamePiece('pawn', 'black'))) == tuple(simple_map.adjacent(1))
-  assert ((5, GamePiece('bishop', 'white')), (7, None)) == tuple(simple_map.adjacent(6))
-  assert ((1, None), (3, None)) == tuple(simple_map.adjacent(2))
-  assert ((1, None),) == tuple(simple_map.adjacent(0))
-  assert ((6, None),) == tuple(simple_map.adjacent(7))
+  assert {(0, None), (2, GamePiece('pawn', 'black'))} == set(simple_map.adjacent(1))
+  assert {(5, GamePiece('bishop', 'white')), (7, None)} == set(simple_map.adjacent(6))
+  assert {(1, None), (3, None)} == set(simple_map.adjacent(2))
+  assert {(1, None),} == set(simple_map.adjacent(0))
+  assert {(6, None),} == set(simple_map.adjacent(7))
   with pytest.raises(IndexError):
     next(simple_map.adjacent(-1))
   with pytest.raises(IndexError):

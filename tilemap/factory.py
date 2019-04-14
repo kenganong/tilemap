@@ -1,3 +1,5 @@
+from tilemap.constants import *
+
 def create_line_map(length):
   return LineMap(length)
 def create_rectangle_map(width, height):
@@ -9,6 +11,8 @@ class Map:
   def _require_coor(self, coor):
     if not self.exists(coor):
       raise IndexError('Coordinate {} outside tilemap bounds'.format(coor))
+  def _shift_coor(self, coor, shift):
+    return (coor[0] + shift[0], coor[1] + shift[1])
   def get(self, coor):
     """Gets the content of the tile at the given coordinate
 
@@ -40,28 +44,29 @@ class Map:
     previous_content = self._get(coor)
     self._set(coor, content)
     return previous_content
-
+  def adjacent(self, coor):
+    """Gets the tiles adjacent to the given coordinate
+    """
+    self._require_coor(coor)
+    for _, direction in self.direction_map.items():
+      new_coor = self._shift_coor(coor, direction)
+      if self.exists(new_coor):
+        yield (new_coor, self._get(new_coor))
 
 class LineMap(Map):
-  LEFT = -1
-  RIGHT = 1
-  DIRECTIONS = [LEFT, RIGHT]
   def __init__(self, size):
     self.tiles = [None for _ in range(size)]
+    self.direction_map = SLOT_DIRECTION_MAP
   def exists(self, coor):
     return coor > -1 and coor < len(self.tiles)
+  def _shift_coor(self, coor, shift):
+    return coor + shift
   def _get(self, coor):
     # internal get assumes that coor is valid
     return self.tiles[coor]
   def _set(self, coor, content):
     # internal set assumes that coor is valid
     self.tiles[coor] = content
-  def adjacent(self, coor):
-    self._require_coor(coor)
-    for direction in self.DIRECTIONS:
-      new_coor = coor + direction
-      if self.exists(new_coor):
-        yield (new_coor, self.tiles[new_coor])
 
 class RectRectMap(Map):
   def __init__(self, width, height):
@@ -70,6 +75,7 @@ class RectRectMap(Map):
     self.cols = []
     for _ in range(width):
       self.cols.append([None for _ in range(height)])
+    self.direction_map = RECT_DIRECTION_MAP
   def exists(self, coor):
     x, y = coor
     return x > -1 and x < self.width and y > -1 and y < self.height
@@ -89,6 +95,7 @@ class RectHexMap(Map):
     self.tiles = []
     for _ in range(height):
       self.tiles.append([None for _ in range(width)])
+    self.direction_map = HEX_DIRECTION_MAP
   def exists(self, coor):
     q, r = coor
     row_offset = (r + 1) // 2
