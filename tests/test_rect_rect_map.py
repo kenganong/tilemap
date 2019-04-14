@@ -66,3 +66,25 @@ def test_exists(simple_map):
   assert simple_map.exists((0, 0))
   assert not simple_map.exists((5, 2))
   assert not simple_map.exists((0, -1))
+
+def test_adjacent(simple_map):
+  # mids
+  expected = {((0, 2), None), ((1, 1), GamePiece('pawn', 'black')), ((2, 2), None), ((1, 3), None)}
+  assert expected == set(simple_map.adjacent((1, 2)))
+  expected = {((2, 0), GamePiece('bishop', 'white')), ((1, 1), GamePiece('pawn', 'black')), ((2, 2), None)}
+  assert expected == set(simple_map.adjacent((2, 1)))
+  # sides
+  expected = {((0, 3), GamePiece('queen', 'black')), ((2, 3), None), ((1, 2), None)}
+  assert expected == set(simple_map.adjacent((1, 3)))
+  expected = {((0, 0), None), ((0, 2), None), ((1, 1), GamePiece('pawn', 'black'))}
+  assert expected == set(simple_map.adjacent((0, 1)))
+  # corners
+  expected = {((0, 1), None), ((1, 0), None)}
+  assert expected == set(simple_map.adjacent((0, 0)))
+  expected = {((1, 3), None), ((2, 2), None)}
+  assert expected == set(simple_map.adjacent((2, 3)))
+  # out-of-bounds
+  with pytest.raises(IndexError):
+    next(simple_map.adjacent((-1, 2)))
+  with pytest.raises(IndexError):
+    next(simple_map.adjacent((2, 4)))

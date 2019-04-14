@@ -7,3 +7,5 @@ class GamePiece:
   def __eq__(self, other):
     return (hasattr(other, 'name') and self.name == other.name
             and hasattr(other, 'color') and self.color == other.color)
+  def __hash__(self):
+    return hash((self.name, self.color))
