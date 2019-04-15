@@ -65,3 +65,11 @@ def test_adjacent(simple_map):
     next(simple_map.adjacent(-1))
   with pytest.raises(IndexError):
     next(simple_map.adjacent(8))
+
+def test_tiles(simple_map):
+  actual = list(simple_map.tiles())
+  assert 8 == len(actual)
+  assert (0, None) in actual
+  assert (2, GamePiece('pawn', 'black')) in actual
+  assert (4, None) in actual
+  assert (5, GamePiece('bishop', 'white')) in actual
