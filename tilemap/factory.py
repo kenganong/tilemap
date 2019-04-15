@@ -13,6 +13,16 @@ class Map:
       raise IndexError('Coordinate {} outside tilemap bounds'.format(coor))
   def _shift_coor(self, coor, shift):
     return (coor[0] + shift[0], coor[1] + shift[1])
+  def exists(self, coor):
+    """Detects whether the given coordinate exists in the map
+
+    Args:
+      coor (tuple): the coordinate of the tile
+
+    Returns:
+      true or false, whether a tile with the given coordinate exists
+    """
+    raise NotImplementedError('Exists not yet implemented')
   def get(self, coor):
     """Gets the content of the tile at the given coordinate
 
