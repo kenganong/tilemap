@@ -53,6 +53,15 @@ class Map:
     """
     for coor in self.tile_coors():
       yield (coor, self._get(coor))
+  def sides(self):
+    """Gets the tiles on the edges of the map.
+    A tile is on the side if at least one its borders is out-of-bounds.
+
+    Returns:
+      generator of (coor, content) tuples for all side tiles
+    """
+    for coor in self.side_coors():
+      yield (coor, self._get(coor))
   def adjacent(self, coor):
     """Gets the tiles adjacent to the given coordinate
 

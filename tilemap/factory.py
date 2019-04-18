@@ -25,6 +25,12 @@ class LineMap(Map):
   def tile_coors(self):
     for i in range(len(self.slots)):
       yield i
+  def side_coors(self):
+    if len(self.slots) < 3:
+      yield from self.tile_coors()
+      return
+    yield 0
+    yield len(self.slots) - 1
 
 class RectRectMap(Map):
   def __init__(self, width, height):
@@ -49,6 +55,16 @@ class RectRectMap(Map):
     for x in range(self.width):
       for y in range(self.height):
         yield (x, y)
+  def side_coors(self):
+    if self.width < 3 or self.height < 3:
+      yield from self.tile_coors()
+      return
+    for x in range(self.width):
+      yield (x, 0)
+      yield (x, self.height - 1)
+    for y in range(1, self.height - 1):
+      yield (0, y)
+      yield (self.width - 1, y)
 
 class RectHexMap(Map):
   def __init__(self, width, height):
@@ -77,3 +93,15 @@ class RectHexMap(Map):
       row_offset = self._row_offset(r)
       for q in range(-row_offset, self.width - row_offset):
         yield (q, r)
+  def side_coors(self):
+    if self.width < 3 or self.height < 3:
+      yield from self.tile_coors()
+      return
+    for x in range(self.width):
+      yield (x, 0)
+      r = self.height - 1
+      yield (x - self._row_offset(r), r)
+    for r in range(1, self.height - 1):
+      row_offset = self._row_offset(r)
+      yield (-row_offset, r)
+      yield (self.width - row_offset - 1, r)

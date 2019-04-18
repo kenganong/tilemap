@@ -4,6 +4,14 @@ from .common import GamePiece
 import pytest
 
 @pytest.fixture
+def zero_map():
+  return factory.create_rectangle_map(0, 0)
+
+@pytest.fixture
+def one_map():
+  return factory.create_rectangle_map(1, 1)
+
+@pytest.fixture
 def empty_map():
   return factory.create_rectangle_map(3, 4)
 
@@ -97,6 +105,25 @@ def test_tiles(simple_map):
   assert ((1, 3), None) in actual
   assert ((2, 2), None) in actual
   assert ((0, 3), GamePiece('queen', 'black')) in actual
+
+def test_sides(zero_map, one_map, simple_map):
+  actual = list(simple_map.sides())
+  assert len(actual) == 10
+  assert ((0, 0), None) in actual
+  assert ((0, 3), GamePiece('queen', 'black')) in actual
+  assert ((1, 3), None) in actual
+  actual = list(zero_map.sides())
+  assert len(actual) == 0
+  actual = list(one_map.sides())
+  assert len(actual) == 1
+  assert ((0, 0), None) in actual
+  tiny_map = factory.create_rectangle_map(2, 2)
+  actual = list(tiny_map.sides())
+  assert len(actual) == 4
+  assert ((1, 0), None) in actual
+  long_map = factory.create_rectangle_map(5, 1)
+  actual = list(long_map.sides())
+  assert len(actual) == 5
 
 def test_move(simple_map):
   # Move piece to empty
