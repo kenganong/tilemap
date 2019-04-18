@@ -104,3 +104,29 @@ def test_tiles(simple_map):
   assert ((-1, 3), None) in actual
   assert ((1, 2), None) in actual
   assert ((0, 3), GamePiece('queen', 'black')) in actual
+
+def test_move(simple_map):
+  # Move piece to empty
+  assert None == simple_map.move((0, 1), (1, 2))
+  assert None == simple_map.get((0, 1))
+  assert GamePiece('pawn', 'black') == simple_map.get((1, 2))
+  # Move empty to empty
+  assert None == simple_map.move((1, 1), (0, 0))
+  assert None == simple_map.get((1, 1))
+  assert None == simple_map.get((0, 0))
+  # Move piece to piece
+  assert GamePiece('pawn', 'black') == simple_map.move((-1, 2), (1, 2))
+  assert None == simple_map.get((-1, 2))
+  assert GamePiece('bishop', 'white') == simple_map.get((1, 2))
+  # Move empty to piece
+  assert GamePiece('queen', 'black') == simple_map.move((-1, 1), (0, 3))
+  assert None == simple_map.get((-1, 1))
+  assert None == simple_map.get((0, 3))
+  # End out of bounds
+  with pytest.raises(IndexError):
+    simple_map.move((1, 2), (3, 2))
+  assert GamePiece('bishop', 'white') == simple_map.get((1, 2))
+  # Start out of bounds
+  with pytest.raises(IndexError):
+    simple_map.move((-1, 0), (1, 2))
+  assert GamePiece('bishop', 'white') == simple_map.get((1, 2))
