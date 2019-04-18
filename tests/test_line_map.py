@@ -4,6 +4,14 @@ from .common import GamePiece
 import pytest
 
 @pytest.fixture
+def zero_map():
+  return factory.create_line_map(0)
+
+@pytest.fixture
+def one_map():
+  return factory.create_line_map(1)
+
+@pytest.fixture
 def empty_map():
   return factory.create_line_map(8)
 
@@ -73,6 +81,23 @@ def test_tiles(simple_map):
   assert (2, GamePiece('pawn', 'black')) in actual
   assert (4, None) in actual
   assert (5, GamePiece('bishop', 'white')) in actual
+
+def test_sides(zero_map, one_map, simple_map):
+  two_map = factory.create_line_map(2)
+  two_map.set(1, GamePiece('meeple', 'blue'))
+  actual = list(simple_map.sides())
+  assert len(actual) == 2
+  assert (0, None) in actual
+  assert (7, None) in actual
+  actual = list(zero_map.sides())
+  assert len(actual) == 0
+  actual = list(one_map.sides())
+  assert len(actual) == 1
+  assert (0, None) in actual
+  actual = list(two_map.sides())
+  assert len(actual) == 2
+  assert (0, None) in actual
+  assert (1, GamePiece('meeple', 'blue')) in actual
 
 def test_move(simple_map):
   # Move piece to empty
