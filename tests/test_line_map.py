@@ -125,3 +125,24 @@ def test_move(simple_map):
   with pytest.raises(IndexError):
     simple_map.move(-1, 3)
   assert GamePiece('meeple', 'blue') == simple_map.get(3)
+
+def test_swap(simple_map):
+  # Swap piece and empty
+  simple_map.swap(2, 4)
+  assert None == simple_map.get(2)
+  assert GamePiece('pawn', 'black') == simple_map.get(4)
+  # Swap empty and empty
+  simple_map.swap(3, 1)
+  assert None == simple_map.get(1)
+  assert None == simple_map.get(3)
+  # Swap piece and piece
+  simple_map.swap(5, 4)
+  assert GamePiece('pawn', 'black') == simple_map.get(5)
+  assert GamePiece('bishop', 'white') == simple_map.get(4)
+  # Out of bounds
+  with pytest.raises(IndexError):
+    simple_map.swap(5, 9)
+  assert GamePiece('pawn', 'black') == simple_map.get(5)
+  with pytest.raises(IndexError):
+    simple_map.swap(-1, 5)
+  assert GamePiece('pawn', 'black') == simple_map.get(5)

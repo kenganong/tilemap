@@ -93,6 +93,22 @@ class Map:
     Raises:
       IndexError when either coordinate is outside the map
     """
-    self._require_coor(end_coor) # check before we set start
-    content = self.set(start_coor, None)
-    return self.set(end_coor, content)
+    self._require_coor(start_coor)
+    self._require_coor(end_coor)
+    content = self._get(start_coor)
+    self._set(start_coor, None)
+    removed_content = self._get(end_coor)
+    self._set(end_coor, content)
+    return removed_content
+  def swap(self, first_coor, second_coor):
+    """Moves the contents of the given first coordinate to the given second coordinate and vice versa.
+
+    Args:
+      first_coor (tuple): content located at this coordinate moves to second_coor
+      second_coor (tuple): content located at this coordinate moves to first_coor
+
+    Raises:
+      IndexError when either coordinate is outside the map
+    """
+    content = self.move(first_coor, second_coor)
+    self._set(first_coor, content) 
