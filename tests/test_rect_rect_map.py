@@ -171,3 +171,22 @@ def test_swap(simple_map):
   with pytest.raises(IndexError):
     simple_map.swap((-1, 0), (2, 2))
   assert GamePiece('bishop', 'white') == simple_map.get((2, 2))
+
+def test_track(simple_map):
+  simple_map.track((2, 0), 'bishop')
+  simple_map.track((2, 2), 'empty')
+  # Moves
+  simple_map.move((2, 0), (1, 2))
+  simple_map.move((2, 2), (0, 0))
+  assert (0, 0) == simple_map.properties['empty']
+  assert (1, 2) == simple_map.properties['bishop']
+  # Swaps
+  simple_map.swap((1, 1), (1, 2))
+  simple_map.swap((0, 0), (0, 1))
+  assert (0, 1) == simple_map.properties['empty']
+  assert (1, 1) == simple_map.properties['bishop']
+  # Overwrite
+  simple_map.move((0, 3), (0, 1))
+  simple_map.set((1, 1), GamePiece('meeple', 'blue'))
+  assert None == simple_map.properties['empty']
+  assert None == simple_map.properties['bishop']

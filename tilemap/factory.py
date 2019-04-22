@@ -10,6 +10,7 @@ def create_rectangle_hex_map(width, height):
 
 class LineMap(Map):
   def __init__(self, size):
+    super().__init__()
     self.slots = [None for _ in range(size)]
     self.direction_map = SLOT_DIRECTION_MAP
   def exists(self, coor):
@@ -34,6 +35,7 @@ class LineMap(Map):
 
 class RectRectMap(Map):
   def __init__(self, width, height):
+    super().__init__()
     self.width = width
     self.height = height
     self.cols = []
@@ -68,6 +70,7 @@ class RectRectMap(Map):
 
 class RectHexMap(Map):
   def __init__(self, width, height):
+    super().__init__()
     self.width = width
     self.height = height
     self._tiles = []
